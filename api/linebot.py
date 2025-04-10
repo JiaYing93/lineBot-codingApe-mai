@@ -25,7 +25,20 @@ def callback():
     except InvalidSignatureError:
         abort(400)
     return 'OK'
-
+buttons_template = TemplateSendMessage(
+    alt_text='Buttons template',
+    template=ButtonsTemplate(
+        thumbnail_image_url='圖片連結',
+        title='Brown Cafe',
+        text='Enjoy ................',
+        actions=[
+            URIAction(
+                label='uri',
+                uri='按鈕連結'
+            )
+        ]
+    )
+)
 @line_handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     if event.message.text.lower() == "test":
@@ -36,6 +49,9 @@ def handle_message(event):
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=reply_message))
-
+def handle_message(event):
+    if event.message.text == "Button":
+        # =====上一頁的樣板訊息程式=====
+        line_bot_api.reply_message(event.reply_token, buttons_template)
 if __name__ == "__main__":
     app.run()
